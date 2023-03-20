@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Member {
+  member_id String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  first_name String
+  last_name  String
+
+  email String @unique
+  phone String @unique
+
+  memberIsHost Boolean
+
+  bookings  Booking[]
+  histories History[]
+  host      Host?
+}
+
+model Host {
+  host_id           String  @id @default(uuid())
+  bankAccountNumber String?
+
+  memberId Member @relation(fields: [hostMember_id], references: [member_id])
+
+  hostMember_id String @unique
+  rooms         Room[]
+}
+
+model Booking {
+  booking_id String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  checkInDate  DateTime
+  checkOutDate DateTime
+
+  member_id Member @relation(fields: [memberMember_id], references: [member_id])
+  room_id   Room   @relation(fields: [roomRoom_id], references: [room_id])
+
+  transportCarVehicleCount    Int
+  transportCarPerVehiclePrice Decimal  @db.Money
+  transportCarDateTime        DateTime
+
+  memberMember_id String
+  roomRoom_id     String
+  histories       History[]
+  Status          Status[]
+}
+
+model History {
+  history_id String @id @default(uuid())
+
+  member_id  Member  @relation(fields: [memberMember_id], references: [member_id])
+  booking_id Booking @relation(fields: [bookingBooking_id], references: [booking_id])
+
+  memberMember_id   String
+  bookingBooking_id String
+}
+
+model Room {
+  room_id   String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  host_id Host @relation(fields: [hostHost_id], references: [host_id])
+
+  roomTitle         String
+  roomDescription   String?
+  roomLocation      String
+  roomType          String
+  roomFacility      String[]  @default(["wifi"])
+  roomGuestCount    Int       @default(1) @db.Integer
+  roomBedroomSingle Int       @default(1) @db.Integer
+  roomBedroomDouble Int       @default(0) @db.Integer
+  roomRestroomCount Int       @default(1) @db.Integer
+  roomKitchenCount  Int       @default(0) @db.Integer
+  roomImage         String?
+  roomPricePerNight Decimal   @db.Money
+  hostHost_id       String
+  Booking           Booking[]
+  Status            Status[]
+}
+
+model Status {
+  status_id         String  @id @default(uuid())
+  statusVacancy     Boolean
+  room_id           Room    @relation(fields: [roomRoom_id], references: [room_id])
+  booking_id        Booking @relation(fields: [bookingBooking_id], references: [booking_id])
+  roomRoom_id       String
+  bookingBooking_id String
+}
