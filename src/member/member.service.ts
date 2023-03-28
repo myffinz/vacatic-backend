@@ -9,7 +9,6 @@ export class MemberService {
   async editMember(memberId, editMemberDto: MemberEditDto) {
     const member = await this.prisma.member.findFirst(memberId);
     if (!member) throw new NotFoundException();
-    console.log(editMemberDto);
     return this.prisma.member.update({
       where: {
         member_id: memberId,
@@ -49,7 +48,7 @@ export class MemberService {
   async selectMemberByName(firstName) {
     const member = await this.prisma.member.findFirst({
       where: {
-        first_name: firstName
+        first_name: firstName,
       },
       select: {
         first_name: true,
