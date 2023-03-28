@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { HostBankAccDto } from './dto/host-bankacc.dto';
 
 @Injectable()
 export class HostService {
   constructor(private prisma: PrismaService) {}
 
   async selectAllHosts() {
-    return this.prisma.host.findMany({
+    const hosts = await this.prisma.host.findMany({
       select: {
         host_id: true,
         bankAccountNumber: true,
@@ -18,10 +19,14 @@ export class HostService {
         },
       },
     });
+    if (!hosts) {
+      throw new Error('No hosts found');
+    }
+    return hosts;
   }
 
   async selectHostById(hostId) {
-    return this.prisma.host.findFirst({
+    const host = await this.prisma.host.findFirst({
       where: {
         host_id: hostId,
       },
@@ -34,6 +39,36 @@ export class HostService {
             room_id: true,
           },
         },
+      },
+    });
+    if (!host) {
+      throw new Error("This Host Doesn't Exist");
+    }
+    return host;
+  }
+
+  async hostUpdateBankAccount(hostId, hostAccountDto: HostBankAccDto) {
+    const host = await this.prisma.host.findFirst(hostId);
+    if (!host) throw new Error("This Host Doesn't Exist");
+    return this.prisma.host.update({
+      where: {
+        host_id: hostId,
+      },
+      data: {
+        ...hostAccountDto,
+      },
+    });
+  }
+
+  async hostRemoveBankAccount(hostId) {
+    const host = await this.prisma.host.findFirst(hostId);
+    if (!host) throw new Error("This Host Doesn't Exist");
+    return this.prisma.host.update({
+      where: {
+        host_id: hostId,
+      },
+      data: {
+        bankAccountNumber: null,
       },
     });
   }
