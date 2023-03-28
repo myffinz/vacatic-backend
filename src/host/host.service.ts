@@ -50,6 +50,7 @@ export class HostService {
   async hostUpdateBankAccount(hostId, hostAccountDto: HostBankAccDto) {
     const host = await this.prisma.host.findFirst(hostId);
     if (!host) throw new Error("This Host Doesn't Exist");
+    console.log(hostAccountDto);
     return this.prisma.host.update({
       where: {
         host_id: hostId,
