@@ -11,7 +11,7 @@ export class MemberEditDto {
 
     @IsNotEmpty()
     @IsEmail()
-    email:  string
+    email: string
 
     @IsNotEmpty()
     @IsString()
