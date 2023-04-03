@@ -26,6 +26,26 @@ export class RoomController {
     return this.roomService.selectAllRoomsByBookingId(bookingId);
   }
 
+  @Get('roomsByTitle/:title')
+  async getRoomsByTitle(@Param('title') title: string) {
+    return this.roomService.searchByRoomTitle(title);
+  }
+
+  @Get('roomsByLocation/:location')
+  async searchByRoomLocation(@Param('location') location: string) {
+    return this.roomService.searchByRoomLocation(location);
+  }
+
+  @Get('roomsByType/:roomType')
+  async searchByRoomType(@Param('roomType') roomType: string) {
+    return this.roomService.searchByRoomType(roomType);
+  }
+
+  @Get('roomsByFacility/:facility')
+  async searchByRoomFacility(@Param('facility') facility: string[]) {
+    return this.roomService.searchByRoomFacility(facility);
+  }
+
   @Post('/:hostId/createRoom')
   async createRoom(
     @Param('hostId') hostId: string,
@@ -37,5 +57,10 @@ export class RoomController {
   @Patch('/:roomId/updateRoom')
   async updateRoom(@Param('roomId') roomId: string, @Body() updateRoomDto) {
     return this.roomService.updateRoom(roomId, updateRoomDto);
+  }
+
+  @Patch('/:roomId/deleteRoom')
+  async deleteRoom(@Param('roomId') roomId: string) {
+    return this.roomService.deleteRoom(roomId);
   }
 }
