@@ -1,93 +1,152 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRoomDto } from './dto/create-room.dto';
+// import { FilterDto } from './dto/filter.dto';
 
 @Injectable()
 export class RoomService {
   constructor(private prisma: PrismaService) {}
 
   async selectAllRooms() {
-    const rooms = await this.prisma.room.findMany({
-      select: {
-        room_id: true,
-        roomTitle: true,
-        roomDescription: true,
-        roomPricePerNight: true,
-        hostHost_id: true,
-        Booking: {
-          select: {
-            booking_id: true,
+    try {
+      const rooms = await this.prisma.room.findMany({
+        select: {
+          room_id: true,
+          roomTitle: true,
+          roomDescription: true,
+          roomLocation: true,
+          roomImage: true,
+          roomType: true,
+          roomFacility: true,
+          roomGuestCount: true,
+          roomBedroomSingle: true,
+          roomBedroomDouble: true,
+          roomRestroomCount: true,
+          roomKitchenCount: true,
+          roomPricePerNight: true,
+          hostHost_id: true,
+          Booking: {
+            select: {
+              booking_id: true,
+            },
           },
         },
-      },
-    });
-    return rooms;
+      });
+      if (!rooms) throw new NotFoundException('No rooms found');
+      return rooms;
+    } catch (err) {
+      console.log(err.message);
+      throw new NotFoundException('No rooms found');
+    }
   }
 
   async selectRoomById(roomId) {
-    const room = this.prisma.room.findFirst({
-      where: {
-        room_id: roomId,
-      },
-      select: {
-        room_id: true,
-        roomTitle: true,
-        roomDescription: true,
-        roomPricePerNight: true,
-        hostHost_id: true,
-        Booking: {
-          select: {
-            booking_id: true,
+    try {
+      const room = await this.prisma.room.findFirst({
+        where: {
+          room_id: roomId,
+        },
+        select: {
+          roomTitle: true,
+          roomDescription: true,
+          roomLocation: true,
+          roomImage: true,
+          roomType: true,
+          roomFacility: true,
+          roomGuestCount: true,
+          roomBedroomSingle: true,
+          roomBedroomDouble: true,
+          roomRestroomCount: true,
+          roomKitchenCount: true,
+          roomPricePerNight: true,
+          hostHost_id: true,
+          Booking: {
+            select: {
+              booking_id: true,
+            },
           },
         },
-      },
-    });
-    return room;
+      });
+      if (!room) throw new NotFoundException('No room found');
+      return room;
+    } catch (err) {
+      console.log(err.message);
+      throw new NotFoundException('No room found');
+    }
   }
 
   async selectAllRoomsByHostId(hostId) {
-    return this.prisma.room.findMany({
-      where: {
-        hostHost_id: hostId,
-      },
-      select: {
-        room_id: true,
-        roomTitle: true,
-        roomDescription: true,
-        roomPricePerNight: true,
-        hostHost_id: true,
-        Booking: {
-          select: {
-            booking_id: true,
+    try {
+      const room = await this.prisma.room.findMany({
+        where: {
+          hostHost_id: hostId,
+        },
+        select: {
+          roomTitle: true,
+          roomDescription: true,
+          roomLocation: true,
+          roomImage: true,
+          roomType: true,
+          roomFacility: true,
+          roomGuestCount: true,
+          roomBedroomSingle: true,
+          roomBedroomDouble: true,
+          roomRestroomCount: true,
+          roomKitchenCount: true,
+          roomPricePerNight: true,
+          hostHost_id: true,
+          Booking: {
+            select: {
+              booking_id: true,
+            },
           },
         },
-      },
-    });
+      });
+      if (!room) throw new NotFoundException('No rooms found');
+      return room;
+    } catch (err) {
+      console.log(err.message);
+      throw new NotFoundException('No room found');
+    }
   }
 
   async selectAllRoomsByBookingId(bookingId) {
-    return this.prisma.room.findMany({
-      where: {
-        Booking: {
-          some: {
-            booking_id: bookingId,
+    try {
+      const rooms = this.prisma.room.findMany({
+        where: {
+          Booking: {
+            some: {
+              booking_id: bookingId,
+            },
           },
         },
-      },
-      select: {
-        room_id: true,
-        roomTitle: true,
-        roomDescription: true,
-        roomPricePerNight: true,
-        hostHost_id: true,
-        Booking: {
-          select: {
-            booking_id: true,
+        select: {
+          roomTitle: true,
+          roomDescription: true,
+          roomLocation: true,
+          roomImage: true,
+          roomType: true,
+          roomFacility: true,
+          roomGuestCount: true,
+          roomBedroomSingle: true,
+          roomBedroomDouble: true,
+          roomRestroomCount: true,
+          roomKitchenCount: true,
+          roomPricePerNight: true,
+          hostHost_id: true,
+          Booking: {
+            select: {
+              booking_id: true,
+            },
           },
         },
-      },
-    });
+      });
+      if (!rooms) throw new NotFoundException('No rooms found');
+      return rooms;
+    } catch (err) {
+      console.log(err.message);
+      throw new NotFoundException('No room found');
+    }
   }
 
   async createRoom(createroomDto: CreateRoomDto, hostId: string) {
@@ -110,18 +169,14 @@ export class RoomService {
       });
       return room;
     } catch (err) {
-      if (err instanceof PrismaClientKnownRequestError) {
-        if (err.code === 'P2002') {
-          throw new ForbiddenException('Room already exists');
-        }
-      }
+      throw new NotFoundException(err);
     }
   }
 
   async updateRoom(roomId, createroomDto: CreateRoomDto) {
     const room = await this.prisma.room.findFirst(roomId);
     if (!room) {
-      throw new ForbiddenException('Room does not exist');
+      throw new NotFoundException('Room does not exist');
     }
     return this.prisma.room.update({
       where: {
@@ -136,7 +191,7 @@ export class RoomService {
   async deleteRoom(roomId) {
     const room = await this.prisma.room.findFirst(roomId);
     if (!room) {
-      throw new ForbiddenException('Room does not exist');
+      throw new NotFoundException('Room does not exist');
     }
     return this.prisma.room.delete({
       where: {
@@ -146,26 +201,70 @@ export class RoomService {
   }
 
   async searchByRoomTitle(roomTitle) {
-    return this.prisma.room.findMany({
-      where: {
-        roomTitle: {
-          contains: roomTitle,
-        },
-      },
-      select: {
-        room_id: true,
-        roomTitle: true,
-        roomDescription: true,
-        roomPricePerNight: true,
-        hostHost_id: true,
-        Booking: {
-          select: {
-            booking_id: true,
+    try {
+      const rooms = await this.prisma.room.findMany({
+        where: {
+          roomTitle: {
+            contains: roomTitle,
           },
         },
-      },
-    });
+        select: {
+          roomTitle: true,
+          roomDescription: true,
+          roomLocation: true,
+          roomImage: true,
+          roomType: true,
+          roomFacility: true,
+          roomGuestCount: true,
+          roomBedroomSingle: true,
+          roomBedroomDouble: true,
+          roomRestroomCount: true,
+          roomKitchenCount: true,
+          roomPricePerNight: true,
+          hostHost_id: true,
+          Booking: {
+            select: {
+              booking_id: true,
+            },
+          },
+        },
+      });
+      if (!rooms) throw new NotFoundException('Room does not exist');
+      return rooms;
+    } catch (err) {
+      throw new NotFoundException('No room found');
+    }
   }
+
+//   async searchByFilter(fieldName: string, data: string) {
+//     try {
+//       return this.prisma.room.findMany({
+//         where: {},
+//         select: {
+//           roomTitle: true,
+//           roomDescription: true,
+//           roomLocation: true,
+//           roomImage: true,
+//           roomType: true,
+//           roomFacility: true,
+//           roomGuestCount: true,
+//           roomBedroomSingle: true,
+//           roomBedroomDouble: true,
+//           roomRestroomCount: true,
+//           roomKitchenCount: true,
+//           roomPricePerNight: true,
+//           hostHost_id: true,
+//           Booking: {
+//             select: {
+//               booking_id: true,
+//             },
+//           },
+//         },
+//       });
+//     } catch (err) {
+//       throw new NotFoundException('Room does not exist');
+//     }
+//   }
 
   async searchByRoomLocation(roomLocation) {
     try {
@@ -176,9 +275,17 @@ export class RoomService {
           },
         },
         select: {
-          room_id: true,
           roomTitle: true,
           roomDescription: true,
+          roomLocation: true,
+          roomImage: true,
+          roomType: true,
+          roomFacility: true,
+          roomGuestCount: true,
+          roomBedroomSingle: true,
+          roomBedroomDouble: true,
+          roomRestroomCount: true,
+          roomKitchenCount: true,
           roomPricePerNight: true,
           hostHost_id: true,
           Booking: {
@@ -189,7 +296,75 @@ export class RoomService {
         },
       });
     } catch (err) {
-      throw new ForbiddenException('Room does not exist');
+      throw new NotFoundException('No Rooms Found');
+    }
+  }
+
+  async searchByRoomType(roomType) {
+    try {
+      return this.prisma.room.findMany({
+        where: {
+          roomType: {
+            contains: roomType,
+          },
+        },
+        select: {
+          roomTitle: true,
+          roomDescription: true,
+          roomLocation: true,
+          roomImage: true,
+          roomType: true,
+          roomFacility: true,
+          roomGuestCount: true,
+          roomBedroomSingle: true,
+          roomBedroomDouble: true,
+          roomRestroomCount: true,
+          roomKitchenCount: true,
+          roomPricePerNight: true,
+          hostHost_id: true,
+          Booking: {
+            select: {
+              booking_id: true,
+            },
+          },
+        },
+      });
+    } catch (err) {
+      throw new NotFoundException('Room does not exist');
+    }
+  }
+
+  async searchByRoomFacility(roomFacility: string[]) {
+    try {
+      return this.prisma.room.findMany({
+        where: {
+          roomFacility: {
+            hasSome: roomFacility,
+          },
+        },
+        select: {
+          roomTitle: true,
+          roomDescription: true,
+          roomLocation: true,
+          roomImage: true,
+          roomType: true,
+          roomFacility: true,
+          roomGuestCount: true,
+          roomBedroomSingle: true,
+          roomBedroomDouble: true,
+          roomRestroomCount: true,
+          roomKitchenCount: true,
+          roomPricePerNight: true,
+          hostHost_id: true,
+          Booking: {
+            select: {
+              booking_id: true,
+            },
+          },
+        },
+      });
+    } catch (err) {
+      throw new NotFoundException('Room does not exist');
     }
   }
 }
