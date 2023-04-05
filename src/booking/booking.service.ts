@@ -81,7 +81,7 @@ export class BookingService {
       return booking;
     } catch (error) {
       console.log(error.message);
-      throw new NotFoundException('No history found');
+      throw new NotFoundException('No booking found');
     }
   }
 

@@ -46,19 +46,24 @@ export class MemberService {
   }
 
   async selectMemberByName(firstName) {
-    const member = await this.prisma.member.findFirst({
-      where: {
-        first_name: firstName,
-      },
-      select: {
-        first_name: true,
-        last_name: true,
-        email: true,
-        phone: true,
-        memberIsHost: true,
-      },
-    });
-    return member;
+    try {
+      const member = await this.prisma.member.findFirst({
+        where: {
+          first_name: firstName,
+        },
+        select: {
+          first_name: true,
+          last_name: true,
+          email: true,
+          phone: true,
+          memberIsHost: true,
+        },
+      });
+      if(!member) throw new NotFoundException('Member Not Found');
+      return member;
+    } catch (err) {
+      throw new NotFoundException('Member Not Found');
+    }
   }
 
   async selectMemberByUUID(memberId) {
@@ -74,6 +79,7 @@ export class MemberService {
         memberIsHost: true,
       },
     });
+    if(!member) throw new NotFoundException('Member Not Found');
     return member;
   }
 
@@ -89,12 +95,18 @@ export class MemberService {
         phone: true,
       },
     });
+    if(!memberByEmail) throw new NotFoundException('Member Not Found');
     return memberByEmail;
   }
 
   async selectAllMember() {
-    const member = await this.prisma.member.findMany();
-    return member;
+    try{
+      const member = await this.prisma.member.findMany();
+      if(!member) throw new NotFoundException('No members found');
+      return member;
+    } catch (err) {
+      throw new NotFoundException('Member Not Found');
+    }
   }
 
   async selectAllHost() {

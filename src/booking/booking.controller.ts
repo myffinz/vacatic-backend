@@ -4,7 +4,7 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 
 @Controller('booking')
 export class BookingController {
-  constructor(private bookingService: BookingService) {}
+  constructor(private readonly bookingService: BookingService) {}
 
   @Get('/')
   async getAllBookings() {

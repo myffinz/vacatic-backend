@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { MemberModule } from './member/member.module';
 import { RoomModule } from './room/room.module';
 import { HostModule } from './host/host.module';
+import { BookingModule } from './booking/booking.module';
+import { HistoryModule } from './history/history.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { HostModule } from './host/host.module';
     MemberModule,
     RoomModule,
     HostModule,
+    BookingModule,
+    HistoryModule,
   ],
 })
 export class AppModule {}

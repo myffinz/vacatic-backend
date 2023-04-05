@@ -1,12 +1,12 @@
 import { Decimal } from "@prisma/client/runtime";
-import { IsDate, IsDecimal, IsInt, IsNotEmpty, IsOptional, IsUUID } from "class-validator";
+import { IsDate, IsDateString, IsDecimal, IsInt, IsISO8601, IsNotEmpty, IsOptional, IsUUID } from "class-validator";
 
 export class CreateBookingDto {
-    @IsDate()
+    @IsISO8601()
     @IsNotEmpty()
     checkInDate: Date
 
-    @IsDate()
+    @IsISO8601()
     @IsNotEmpty()
     checkOutDate: Date
 
@@ -18,7 +18,7 @@ export class CreateBookingDto {
     @IsNotEmpty()
     transportCarPerVehiclePrice: Decimal
 
-    @IsDate()
+    @IsISO8601()
     @IsNotEmpty()
     transportCarDateTime: Date
 

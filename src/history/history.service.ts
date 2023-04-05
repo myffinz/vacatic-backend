@@ -8,15 +8,9 @@ export class HistoryService {
 
   async selectAllHistory() {
     try {
-      const histories = await this.prisma.history.findMany({
-        select: {
-          history_id: true,
-          memberMember_id: true,
-          bookingBooking_id: true,
-        },
-      });
+      const history = await this.prisma.history.findMany();
       if (!history) throw new NotFoundException('No history found');
-      return histories;
+      return history;
     } catch (error) {
       console.log(error.message);
       throw new NotFoundException('No history found');
@@ -25,7 +19,7 @@ export class HistoryService {
 
   async selectHistoryById(historyId) {
     try {
-      const histories = await this.prisma.history.findFirst({
+      const history = await this.prisma.history.findFirst({
         where: {
           history_id: historyId,
         },
@@ -36,7 +30,7 @@ export class HistoryService {
         },
       });
       if (!history) throw new NotFoundException('No history found');
-      return histories;
+      return history;
     } catch (error) {
       console.log(error.message);
       throw new NotFoundException('No history found');
@@ -45,7 +39,7 @@ export class HistoryService {
 
   async selectHistoryByMemberId(memberId) {
     try {
-      const histories = await this.prisma.history.findMany({
+      const history = await this.prisma.history.findMany({
         where: {
           memberMember_id: memberId,
         },
@@ -56,7 +50,7 @@ export class HistoryService {
         },
       });
       if (!history) throw new NotFoundException('No history found');
-      return histories;
+      return history;
     } catch (error) {
       console.log(error.message);
       throw new NotFoundException('No history found');

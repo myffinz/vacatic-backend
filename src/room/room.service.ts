@@ -174,18 +174,22 @@ export class RoomService {
   }
 
   async updateRoom(roomId, createroomDto: CreateRoomDto) {
-    const room = await this.prisma.room.findFirst(roomId);
-    if (!room) {
-      throw new NotFoundException('Room does not exist');
+    try {
+      const room = await this.prisma.room.findFirst(roomId);
+      if (!room) {
+        throw new NotFoundException('Room does not exist');
+      }
+      return this.prisma.room.update({
+        where: {
+          room_id: roomId,
+        },
+        data: {
+          ...createroomDto,
+        },
+      });
+    } catch (err) {
+      throw new NotFoundException(err);
     }
-    return this.prisma.room.update({
-      where: {
-        room_id: roomId,
-      },
-      data: {
-        ...createroomDto,
-      },
-    });
   }
 
   async deleteRoom(roomId) {
@@ -236,35 +240,35 @@ export class RoomService {
     }
   }
 
-//   async searchByFilter(fieldName: string, data: string) {
-//     try {
-//       return this.prisma.room.findMany({
-//         where: {},
-//         select: {
-//           roomTitle: true,
-//           roomDescription: true,
-//           roomLocation: true,
-//           roomImage: true,
-//           roomType: true,
-//           roomFacility: true,
-//           roomGuestCount: true,
-//           roomBedroomSingle: true,
-//           roomBedroomDouble: true,
-//           roomRestroomCount: true,
-//           roomKitchenCount: true,
-//           roomPricePerNight: true,
-//           hostHost_id: true,
-//           Booking: {
-//             select: {
-//               booking_id: true,
-//             },
-//           },
-//         },
-//       });
-//     } catch (err) {
-//       throw new NotFoundException('Room does not exist');
-//     }
-//   }
+  //   async searchByFilter(fieldName: string, data: string) {
+  //     try {
+  //       return this.prisma.room.findMany({
+  //         where: {},
+  //         select: {
+  //           roomTitle: true,
+  //           roomDescription: true,
+  //           roomLocation: true,
+  //           roomImage: true,
+  //           roomType: true,
+  //           roomFacility: true,
+  //           roomGuestCount: true,
+  //           roomBedroomSingle: true,
+  //           roomBedroomDouble: true,
+  //           roomRestroomCount: true,
+  //           roomKitchenCount: true,
+  //           roomPricePerNight: true,
+  //           hostHost_id: true,
+  //           Booking: {
+  //             select: {
+  //               booking_id: true,
+  //             },
+  //           },
+  //         },
+  //       });
+  //     } catch (err) {
+  //       throw new NotFoundException('Room does not exist');
+  //     }
+  //   }
 
   async searchByRoomLocation(roomLocation) {
     try {
