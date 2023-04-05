@@ -1,3 +1,4 @@
+import { Options } from "@nestjs/common";
 import { Decimal } from "@prisma/client/runtime";
 import { IsArray, IsDecimal, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
@@ -6,7 +7,7 @@ export class CreateRoomDto {
     @IsNotEmpty()
     roomTitle: string
 
-    @IsNotEmpty()
+    @IsString()
     @IsOptional()
     roomDescription: string
 
@@ -18,7 +19,7 @@ export class CreateRoomDto {
     @IsNotEmpty()
     roomType: string
 
-    @IsString()
+    @IsString({each: true})
     @IsArray()
     @IsNotEmpty()
     roomFacility: string[]
@@ -47,7 +48,7 @@ export class CreateRoomDto {
     @IsOptional()
     roomImage: string
 
-    @IsDecimal()
+    @IsDecimal({force_decimal:true, decimal_digits: '2', locale:'en-US'})
     @IsNotEmpty()
     roomPricePerNight: Decimal
 

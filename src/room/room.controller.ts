@@ -55,7 +55,7 @@ export class RoomController {
   }
 
   @Patch('/:roomId/updateRoom')
-  async updateRoom(@Param('roomId') roomId: string, @Body() updateRoomDto) {
+  async updateRoom(@Param('roomId') roomId: string, @Body() updateRoomDto: CreateRoomDto) {
     return this.roomService.updateRoom(roomId, updateRoomDto);
   }
 

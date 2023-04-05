@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HostBankAccDto } from './dto/host-bankacc.dto';
 
@@ -42,7 +42,7 @@ export class HostService {
       },
     });
     if (!host) {
-      throw new Error("This Host Doesn't Exist");
+      throw new NotFoundException("This Host Doesn't Exist");
     }
     return host;
   }
