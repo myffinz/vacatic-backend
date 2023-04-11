@@ -1,14 +1,27 @@
 version: '3.8'
 services:
-  vacatic-backend:
-    image: postgres:13
-    ports:
-      - 5434:5432
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: vacaticadmin123
-      POSTGRES_DB: vacaticdev
-    networks:
-      - vacatic 
-networks:
-  vacatic:
+  # vacatic-backend:
+  #   image: postgres:13
+  #   container_name: postgres
+  #   ports:
+  #     - 5434:5432
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: vacaticadmin123
+  #     POSTGRES_DB: vacaticdev
+    # networks:
+    #   - vacatic 
+
+  vacatic-api:
+    container_name: vacaticdev-backend
+    build: .
+    command: npm run start:dev
+    ports: 
+      - 3333:3333
+    env_file:
+      - .env
+    restart: unless-stopped
+    # links: db:vacatic-backend
+
+# networks:
+#   vacatic:
