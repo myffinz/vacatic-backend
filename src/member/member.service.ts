@@ -59,7 +59,7 @@ export class MemberService {
           memberIsHost: true,
         },
       });
-      if(!member) throw new NotFoundException('Member Not Found');
+      if (!member) throw new NotFoundException('Member Not Found');
       return member;
     } catch (err) {
       throw new NotFoundException('Member Not Found');
@@ -79,7 +79,7 @@ export class MemberService {
         memberIsHost: true,
       },
     });
-    if(!member) throw new NotFoundException('Member Not Found');
+    if (!member) throw new NotFoundException('Member Not Found');
     return member;
   }
 
@@ -95,16 +95,17 @@ export class MemberService {
         phone: true,
       },
     });
-    if(!memberByEmail) throw new NotFoundException('Member Not Found');
+    if (!memberByEmail) throw new NotFoundException('Member Not Found');
     return memberByEmail;
   }
 
   async selectAllMember() {
-    try{
+    try {
       const member = await this.prisma.member.findMany();
-      if(!member) throw new NotFoundException('No members found');
+      if (!member) throw new NotFoundException('No members found');
       return member;
     } catch (err) {
+      console.log(err);
       throw new NotFoundException('Member Not Found');
     }
   }
