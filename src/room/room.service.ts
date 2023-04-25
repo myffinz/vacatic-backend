@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 // import { FilterDto } from './dto/filter.dto';
@@ -169,7 +169,7 @@ export class RoomService {
       });
       return room;
     } catch (err) {
-      throw new NotFoundException(err);
+      throw new ForbiddenException(err);
     }
   }
 

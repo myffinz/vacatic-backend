@@ -94,10 +94,12 @@ model Room {
 }
 
 model Status {
-  status_id         String  @id @default(uuid())
-  statusVacancy     Boolean
-  room_id           Room    @relation(fields: [roomRoom_id], references: [room_id])
-  booking_id        Booking @relation(fields: [bookingBooking_id], references: [booking_id])
+  status_id     String  @id @default(uuid())
+  statusVacancy Boolean
+
+  room_id    Room    @relation(fields: [roomRoom_id], references: [room_id])
+  booking_id Booking @relation(fields: [bookingBooking_id], references: [booking_id])
+
   roomRoom_id       String
   bookingBooking_id String
 }

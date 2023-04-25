@@ -6,6 +6,11 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
+  @Get('/test')
+  async getTest() {
+    return 'test';
+  }
+
   @Get('/')
   async getAllBookings() {
     return this.bookingService.selectAllBookings();
